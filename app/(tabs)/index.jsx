@@ -180,7 +180,7 @@ const RadioPageScreen = () => {
     }
 
     axios
-      .post("http://15.152.240.98:3000/", userData)
+      .post("https://subbermine.duckdns.org:3000", userData)
       .then((res) => {
         if (res.data.message === "Success") {
           alert("Data entered successfully");

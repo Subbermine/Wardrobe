@@ -2,12 +2,11 @@ import { StyleSheet, View, Text, ScrollView } from "react-native";
 import React, { useState } from "react";
 import LogsElement from "@/components/LogsElement";
 import axios from "axios";
-// import { ScrollView } from "react-native-web";
 
 export default function ProperLogs() {
   const [users, setUsers] = useState([]);
   axios
-    .get("http://15.152.240.98:3000/logs") // Replace with your backend URL
+    .get("https://subbermine.duckdns.org:3000/logs") // Replace with your backend URL
     .then((response) => {
       setUsers(response.data); // Set the fetched data to state
     })

@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 export default function LogsElement(props) {
-  const navigation = useNavigation();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -27,8 +27,8 @@ export default function LogsElement(props) {
       </View>
       <TouchableOpacity
         onPress={() => {
-          console.log("Data being passed:", { name: "Test", id: 1 });
-          navigation.navigate("EditArea", { name: "Test", id: 1 });
+          console.log("Data being passed:", props);
+          router.push({ pathname: "/EditArea", params: { data: "Test data" } });
         }}
       >
         <AntDesign name="edit" size={24} color="#4169E1" />

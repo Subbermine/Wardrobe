@@ -25,6 +25,16 @@ const _layout = () => {
           headerStyle: { backgroundColor: "black" },
         }}
       />
+      <Stack.Screen
+        name="Password"
+        options={{
+          title: "Enter Password",
+          statusBarBackgroundColor: "#000000",
+          headerTintColor: "white",
+          headerTitleAlign: "center",
+          headerStyle: { backgroundColor: "black" },
+        }}
+      />
     </Stack>
   );
 };

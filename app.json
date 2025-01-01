@@ -12,21 +12,25 @@
       "supportsTablet": true
     },
     "android": {
-      "intentFilters":[{
-        "data":[
-          {
-            "scheme":"http"
-          },{
-            "scheme":"https"
-          }
-        ]
-      }],
-      "usesCleartextTraffic":true,
+      "intentFilters": [
+        {
+          "data": [
+            {
+              "scheme": "http"
+            },
+            {
+              "scheme": "https"
+            }
+          ]
+        }
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions":["INTERNET","CAMERA"],
+      "permissions": [
+        "android.permission.INTERNET"
+      ],
       "package": "com.subbermine.myapp"
     },
     "web": {
@@ -44,7 +48,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true

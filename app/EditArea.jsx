@@ -1,41 +1,41 @@
 import { StyleSheet, Text, View, TextInput, Button } from "react-native";
-import React, { useState } from "react";
+import { useRouter } from "expo-router";
 
-export default function EditArea({ route }) {
-  const { name, id } = route?.params || {};
+export default function EditArea() {
+  const { params } = useRouter();
+  const { data } = params || {};
+  const parsedData = data ? JSON.parse(decodeURIComponent(data)) : {};
 
-  const handleSave = () => {
-    // Handle save logic (e.g., send to server, etc.)
-    // console.log("Saved:", text);
-  };
+  console.log("Received data:", params);
 
   return (
     <View style={styles.container}>
-      {console.log("Data being retrieved:", name)}
-      <Text style={{ color: "white" }}>Category:{}</Text>
+      <Text style={styles.heading}>Edit Area</Text>
 
-      <Button title="Save" onPress={handleSave} />
+      {parsedData.category ? (
+        <>
+          <Text style={styles.label}>Category:</Text>
+          <TextInput
+            style={styles.textInput}
+            defaultValue={parsedData.category}
+          />
+        </>
+      ) : (
+        <Text style={styles.warningText}>No category data provided</Text>
+      )}
+
+      <Button title="Save" onPress={() => console.log("Save button pressed")} />
     </View>
   );
 }
 
-// category: category,
-// stiched: stiched,
-// payment: payment,
-// semicategory: semicategory,
-// subunstiched: subunstiched,
-// bridalcategory: bridalcategory,
-// quantity: quantity,
-// amount: amount,
-// number: number,
-// name: name,
-// time: time,
-
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
+    padding: 16,
   },
   heading: {
     fontSize: 24,
@@ -44,12 +44,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   textInput: {
-    width: "100%",
+    width: "80%",
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
+    color: "white",
+    marginBottom: 20,
+    backgroundColor: "#1e1e1e",
+  },
+  label: {
+    fontSize: 18,
+    color: "white",
+    marginBottom: 8,
+  },
+  warningText: {
+    fontSize: 16,
+    color: "red",
     marginBottom: 20,
   },
 });

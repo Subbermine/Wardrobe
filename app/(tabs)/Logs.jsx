@@ -1,7 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
 import Button from "../../components/Button/Button";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 
 export default function Logs() {
@@ -12,7 +11,7 @@ export default function Logs() {
       <Button
         style={styles.text}
         onPress={() => {
-          navigation.navigate("ProperLogs");
+          navigation.navigate("Password");
         }}
         symbol={"file-document-outline"}
       >
