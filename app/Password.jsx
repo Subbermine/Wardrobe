@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, TextInput, Alert, StyleSheet } from "react-native";
 import Button from "@/components/Button/Button";
 import { useNavigation } from "@react-navigation/native";
+import { getDocs, collection } from "firebase/firestore";
+import { db, query, orderBy } from "../utils/firebase";
 
 const PasswordPage = () => {
   const [password, setPassword] = useState("");
@@ -10,19 +12,37 @@ const PasswordPage = () => {
   // I'm removing the password validation logic from the component
   // to keep it simple and focused on the UI part.
 
-  const handleSubmit = () => {
-    let pass = password.trim().toLowerCase();
-    const snapshot = await getDocs(collection(db, "password"));
-    const DBpass = snapshot.docs[0].data().pass;
-    if (pass !== DBpass) {
-      Alert.alert("Error", "Please enter the correct password");
-      setPassword("");
-    } else {
-      setPassword("");
-      navigation.pop();
-      navigation.navigate("ProperLogs");
-    }
+  const handleSubmit = async () => {
+    console.log("SUBMITTED CLICKED");
+    try {
+      const pass = password.trim().toLowerCase();
 
+      const snapshot = await getDocs(
+        collection(db, "password")
+      );
+
+
+      const DBpass = snapshot.docs[0]
+        .data()
+        .pass
+        .trim()
+        .toLowerCase();
+
+      if (pass !== DBpass) {
+        Alert.alert(
+          "Error",
+          "Please enter the correct password"
+        );
+        setPassword("");
+      } else {
+        setPassword("");
+        navigation.pop();
+        navigation.navigate("ProperLogs");
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
