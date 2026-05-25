@@ -1,9 +1,10 @@
 import { StyleSheet, View, StatusBar, ScrollView, Platform } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import RadioButton from "@/components/RadioButton";
 import Button from "@/components/Button/Button";
 import RadioLabel from "@/components/RadioLabel";
 import Label from "@/components/Label";
+import { DataContext } from "../context/DataContext";
 import {
   registerForPushNotificationsAsync,
   sendPushNotification,
@@ -12,6 +13,7 @@ import {
 import { db, collection, addDoc, doc, setDoc, getDocs } from "../../utils/firebase";
 
 const RadioPagesScreen = () => {
+  const { setData } = useContext(DataContext);
   const [category, setCategory] = useState("");
   const [bridalcategory, setBridalcategory] = useState("");
   const [semicategory, setSemiCategory] = useState("");
@@ -23,20 +25,22 @@ const RadioPagesScreen = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
+  // Sync amount with DataContext for Gpay screen
+  useEffect(() => {
+    setData(prev => ({ ...prev, amount: amount }));
+  }, [amount]);
+
   useEffect(() => {
     const setupNotifications = async () => {
       try {
         const token = await registerForPushNotificationsAsync();
         if (token) {
-          // Store token in Firestore "push_tokens" collection using the token itself as the document ID
-          // to prevent duplicates across startups
           const tokenRef = doc(db, "push_tokens", token);
           await setDoc(tokenRef, {
             token: token,
             updatedAt: new Date().toISOString(),
             platform: Platform.OS
           }, { merge: true });
-          console.log("Device push token successfully registered in Firestore.");
         }
       } catch (err) {
         console.warn("Failed to register device push token in database:", err);
@@ -47,19 +51,15 @@ const RadioPagesScreen = () => {
 
   const handleEnter = async (userData) => {
     try {
-      // Add order document directly to Firestore "orders" collection
       const docRef = await addDoc(collection(db, "orders"), userData);
 
       if (docRef.id) {
         alert("Order Placed Successfully!");
-
-        // Trigger local notification immediately on this active device
         await scheduleLocalNotification(
-          "Order Placed Successfully! 🎉",
+          "Order Placed Successfully! \ud83c\udf89",
           `New ${userData.category} order of ${userData.quantity}x for Rs. ${userData.amount} has been submitted.`
         );
 
-        // Fetch all registered push tokens from Firestore and broadcast
         try {
           const querySnapshot = await getDocs(collection(db, "push_tokens"));
           const tokens = [];
@@ -71,7 +71,6 @@ const RadioPagesScreen = () => {
           });
 
           if (tokens.length > 0) {
-            console.log(`Broadcasting order notification to ${tokens.length} registered device(s)...`);
             await sendPushNotification(tokens, `Rs.${userData.amount} received using ${userData.payment} method. New ${userData.category} order placed by ${userData.name || "Customer"}!`);
           }
         } catch (pushErr) {
@@ -98,7 +97,6 @@ const RadioPagesScreen = () => {
     setInputValue("");
     setAmount("");
     setPayment("");
-    setInputValue("");
   };
 
   const call = () => {
@@ -272,7 +270,7 @@ const RadioPagesScreen = () => {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: "black" }]}>
-      <StatusBar backgroundColor="black" barStyle="dark-content" />
+      <StatusBar backgroundColor="black" barStyle="light-content" />
       <View style={styles.center}>
         <Label value="Category:" />
       </View>
@@ -431,7 +429,6 @@ const RadioPagesScreen = () => {
           Reset
         </Button>
       </View>
-      <StatusBar style="auto" />
     </ScrollView>
   );
 };
